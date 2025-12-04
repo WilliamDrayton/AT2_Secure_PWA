@@ -1,0 +1,50 @@
+<!--
+	Project: ThymeMachine - Software Engineering AT1
+	Author: William Drayton
+	Date Created: 1/12/25
+	Description: A Signup for ThymeMachine
+	-->
+
+
+
+<!DOCTYPE html>
+<head>
+    <link rel='stylesheet' href='styles/myStyle.css' />
+    <script src='scripts\myScripts.js'></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Thyme Machine/Sign Up</title>
+</head>
+
+<body>
+    <h1>ThymeMachine</h1>
+    <h2>Create an Account:</h2>
+
+    <form id="signupForm">
+        <label>Username:</label>
+        <input type="text" id="newUsername" name="newUsername" required><br><br>
+
+        <label>Password:</label>
+        <input type="password" id="newUserpassword" name="newUserpassword"><br><br>
+
+        <label>Email Address:</label>
+        <input type="email" id="email" name="email"><br><br>
+
+        <button type="submit">Enter</button>
+
+    </form>
+
+    <h3>Already Have An Account? Sign In Here:</h3>
+
+    <a href="login.html">Sign In</a>
+
+    <script>
+
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            window.location.href = 'index.html'; 
+        });
+    </script>
+        
+
+</body>
+</html>
