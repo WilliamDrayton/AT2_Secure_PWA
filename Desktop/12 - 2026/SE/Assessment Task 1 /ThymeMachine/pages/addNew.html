@@ -8,10 +8,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<link rel='stylesheet' href='styles/myStyle.css' />
-		<script src='scripts\myScripts.js'></script>
+		<link rel='stylesheet' href='../styles/myStyle.css' />
+		<script src='../scripts/myScripts.js'></script>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-		<title>Thyme Machine/Add New</title>
+		<title>ThymeMachine/Add New</title>
 	</head>
 
     <body>
@@ -30,19 +30,35 @@
 
 				<div class="mb-3">
 					<label>Ingredients:</label>
-					<input type="text" placeholder="Ingredient Name" name="ingredientName" required>
+					<input type="text" placeholder="name" name="ingredientName" required>
 					<input type="number" placeholder="amount" name="ingredientAmount" required>
 					<select name="ingredientUnit">
 						<option value="mg">mg</option>
-						<option value="mg">g</option>
+						<option value="g">g</option>
 						<option value="kg">kg</option>
 						<option value="mL">mL</option>
 						<option value="L">L</option>
 						<option value="lb">lb</option>
 						<option value="oz">oz</option>
 						<option value="gal">gal</option>
+						<option value="tsp">tsp</option>
+						<option value="tbsp">tbsp</option>
+						<option value="cup">cup</option>
+						<option value="fl oz">fl oz</option>
 					</select>
-				    <button type="button" id="addanotherIngredietn" class="btn btn-secondary btn-sm mt-2">Add Another Ingredient</button>
+					<button type="button" id="enter" class="btn btn-secondary">Enter</button><br><br>
+
+				    <button type="button" id="addanotherIngredient" class="btn btn-secondary">Add Another Ingredient</button>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Instructions:</label>
+					<textarea id="instructions" name="instructions" class="form-control" rows="5" placeholder="enter the instructions for your recipe:" required></textarea>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Notes:</label>
+					<textarea id="notes" name="notes" class="form-control" rows="3" placeholder="enter any additional notes:"></textarea>
 				</div>
 			</form>
 
@@ -52,10 +68,10 @@
 
 
 			<nav class="navbar fixed-bottom bg-light border-top">
-				<a class="nav link mx-3" href='index.html'><img src="images/ThymeMachine.png" alt="Home" width="200" height="200"></img></a>
-				<a class="nav link mx-3" href='pages/addNew.html'>Add Recipe</a>
-				<a class="nav link mx-3" href='pages/myRecipes.html'>My Recipes</a>
-				<a class="nav link mx-3" href='pages/myProfile.html'>My Profile</a>
+				<a class="nav-link mx-3" href='../index.html'><img src="../images/ThymeMachine.png" alt="Home" width="200" height="200"></img></a>
+				<a class="nav-link mx-3" href='addNew.html'>Add Recipe</a>
+				<a class="nav-link mx-3" href='myRecipes.html'>My Recipes</a>
+				<a class="nav-link mx-3" href='myProfile.html'>My Profile</a>
 			</nav>
 			
 
