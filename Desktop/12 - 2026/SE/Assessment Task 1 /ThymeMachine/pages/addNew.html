@@ -11,7 +11,7 @@
 		<link rel='stylesheet' href='../styles/myStyle.css' />
 		<script src='../scripts/myScripts.js'></script>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-		<title>ThymeMachine/Add New</title>
+		<title>ThymeMachine/AddNew</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -25,62 +25,62 @@
 		<main class="container p-4">
 			<div class="card p-4 shadow">
 
-			<h2>Add a New Recipe:</h2>
-			<form id="addRecipe">
+				<h2>Add a New Recipe:</h2>
+				<form id="addRecipe">
 				
-				<div class="mb-3">
-					<label>Recipe Name:</label>
-					<input type="text" id="recipeName" name="recipeName" required>
-				</div>
-				
-				<div class="mb-3">
-					<label>Cook Time:</label>
-					<div class="d-flex gap-2 align-items-center">
-						<input type="number" id="cookHours" name="cookHours" min="0" max="24" class="form-control" placeholder="0" required>
-						<span>hr/s</span>
-						<input type="number" id="cookMinutes" name="cookMinutes" min="0" max="60" class="form-control" placeholder="0" required>
-						<span>min/s</span>
+					<div class="mb-3">
+						<label>Recipe Name:</label>
+						<input type="text" id="recipeName" name="recipeName" required>
 					</div>
-					
-				</div>
-
-
-				<div class="mb-3">
-					<label>Ingredients:</label>
-					<input type="text" placeholder="name" name="ingredientName" required>
-					<input type="number" placeholder="amount" name="ingredientAmount" required>
-					<select name="ingredientUnit">
-						<option value="mg">mg</option>
-						<option value="g">g</option>
-						<option value="kg">kg</option>
-						<option value="mL">mL</option>
-						<option value="L">L</option>
-						<option value="lb">lb</option>
-						<option value="oz">oz</option>
-						<option value="gal">gal</option>
-						<option value="tsp">tsp</option>
-						<option value="tbsp">tbsp</option>
-						<option value="cup">cup</option>
-						<option value="fl oz">fl oz</option>
-					</select>
-					<button type="button" id="enter" class="btn btn-secondary">Enter</button><br><br>
-
-				    <button type="button" id="addanotherIngredient" class="btn btn-secondary">Add Another Ingredient</button>
-				</div>
-
-				<div class="mb-3">
-					<label class="form-label">Instructions:</label>
-					<textarea id="instructions" name="instructions" class="form-control" rows="5" placeholder="enter the instructions for your recipe:" required></textarea>
-				</div>
-
-				<div class="mb-3">
-					<label class="form-label">Notes:</label>
-					<textarea id="notes" name="notes" class="form-control" rows="3" placeholder="enter any additional notes:"></textarea>
-				</div>
-
-				<button type="button" id="saveRecipe" name="saveRecipe" class="btn btn-primary">Save</button>
 				
-			</form>
+					<div class="mb-3">
+						<label>Cook Time:</label>
+						<div class="d-flex gap-2 align-items-center">
+							<input type="number" id="cookHours" name="cookHours" min="0" max="24" class="form-control" placeholder="0" required>
+							<span>hr/s</span>
+							<input type="number" id="cookMinutes" name="cookMinutes" min="0" max="60" class="form-control" placeholder="0" required>
+							<span>min/s</span>
+						</div>
+					
+					</div>
+
+
+					<div class="mb-3">
+						<label>Ingredients:</label>
+						<input type="text" placeholder="name" name="ingredientName" required>
+						<input type="number" placeholder="amount" name="ingredientAmount" required>
+						<select name="ingredientUnit">
+							<option value="mg">mg</option>
+							<option value="g">g</option>
+							<option value="kg">kg</option>
+							<option value="mL">mL</option>
+							<option value="L">L</option>
+							<option value="lb">lb</option>
+							<option value="oz">oz</option>
+							<option value="gal">gal</option>
+							<option value="tsp">tsp</option>
+							<option value="tbsp">tbsp</option>
+							<option value="cup">cup</option>
+							<option value="fl oz">fl oz</option>
+						</select>
+						<button type="button" id="enter" class="btn btn-secondary">Enter</button><br><br>
+
+				    	<button type="button" id="addanotherIngredient" class="btn btn-secondary">Add Another Ingredient</button>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Instructions:</label>
+						<textarea id="instructions" name="instructions" class="form-control" rows="5" placeholder="enter the instructions for your recipe:" required></textarea>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Notes:</label>
+						<textarea id="notes" name="notes" class="form-control" rows="3" placeholder="enter any additional notes:"></textarea>
+					</div>
+
+					<button type="button" id="saveRecipe" name="saveRecipe" class="btn btn-primary">Save</button>
+				
+				</form>
 
 			</div>
 
@@ -88,22 +88,22 @@
 
 
 			<nav class="navbar fixed-bottom custom-navbar border-top">
-			<div class="container-fluid d-flex justify-content-center align-items-center gap-5">
+				<div class="container-fluid d-flex justify-content-center align-items-center gap-5">
 
 				
-				<a class="nav-link" href="../index.html">
-					<img src="../images/ThymeMachine.png" alt="Home" class="img-fluid nav-icon">
-				</a>
+					<a class="nav-link" href="../index.html">
+						<img src="../images/ThymeMachine.png" alt="Home" class="img-fluid nav-icon">
+					</a>
 		
 				
-				<div class="d-flex gap-5">
-					<a class="nav-link nav-label" href="addNew.html">Add Recipe</a>
-					<a class="nav-link nav-label" href="myRecipes.html">My Recipes</a>
-					<a class="nav-link nav-label" href="myProfile.html">My Profile</a>
-				</div>
+					<div class="d-flex gap-5">
+						<a class="nav-link nav-label" href="addNew.html">Add Recipe</a>
+						<a class="nav-link nav-label" href="myRecipes.html">My Recipes</a>
+						<a class="nav-link nav-label" href="myProfile.html">My Profile</a>
+					</div>
 		
-			</div>
-		</nav>
+				</div>
+			</nav>
 			
 
 

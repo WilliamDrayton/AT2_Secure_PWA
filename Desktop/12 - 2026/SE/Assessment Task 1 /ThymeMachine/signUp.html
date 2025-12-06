@@ -17,28 +17,45 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <h1>ThymeMachine</h1>
-    <h2>Create an Account:</h2>
 
-    <form id="signupForm">
-        <label>Username:</label>
-        <input type="text" id="newUsername" name="newUsername" required><br><br>
+    <header class="text-center custom-header text-white p-3 fw-bold">ThymeMachine</header>
 
-        <label>Password:</label>
-        <input type="password" id="newUserpassword" name="newUserpassword"><br><br>
 
-        <label>Email Address:</label>
-        <input type="email" id="email" name="email"><br><br>
+    <div class="logo-bar d-flex justify-content-center align-items-center">
+        <img src="images/ThymeMachine.png" alt="ThymeMachine Logo" class="img-fluid" style="height: 80px;">
+    </div>
 
-        <button type="submit" class="btn btn-secondary">Enter</button>
 
-    </form>
+    <div class="login-container container d-flex flex-column mt-3">
+        <div class="login-card card p-4">
+    
+            <h2>Welcome to ThymeMachine!</h2><br>
 
-    <h3>Already Have An Account? Sign In Here:</h3>
+            <h3>Create an Account:</h3>
 
-    <a href="login.html">Sign In</a>
+   
+            <form id="loginForm">
+
+                <label class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required><br>
+
+                <label class="form-label">Email Address:</label>
+                <input type="email" id="emailAddress" name="emailAddress" class="form-control" required><br>
+
+                <label class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required><br>
+
+                <button type="submit" class="btn btn-secondary">Sign Up</button>
+    
+            </form>
+
+            <br><h2>Returning to ThymeMachine?</h2>
+            <h3>Log in Here:</h3>
+            <p><a href="login.html">Login</a></p>
+
+        </div>
+    </div>
 
     <script>
 

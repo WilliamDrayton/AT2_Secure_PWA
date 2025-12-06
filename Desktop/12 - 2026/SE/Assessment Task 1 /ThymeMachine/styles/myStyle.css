@@ -1,3 +1,13 @@
+/*
+	Project: ThymeMachine - Software Engineering AT1
+	Author: William Drayton
+	Date Created: 23/11/25
+	Description: A style sheet for ThymeMachine
+*/
+
+
+
+
 main{
     font-family: 'Montserrat', sans-serif;
 }
@@ -6,7 +16,6 @@ main{
   background-color: #E9E8E3;
   padding: 0.35rem 0;
   font-family: 'Montserrat', sans-serif;
- 
 }
 
 .nav-icon {
@@ -26,6 +35,19 @@ main{
   background-color: #EE9E61;
   font-family: 'Montserrat', sans-serif;
 }
+
+.login-container {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-label {
+    color: #EE9E61;
+}
+
+.logo-bar {
+    background-color: #E9E8E3;
+}
+
 
 
 /*# sourceMappingURL=myStyle.css.map */

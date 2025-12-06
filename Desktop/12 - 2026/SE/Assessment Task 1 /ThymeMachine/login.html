@@ -18,28 +18,47 @@
 </head>
 
 <body>
-    <h1>ThymeMachine</h1>
-    <h2>Existing User? Welcome Back!</h2>
-    <h3>Sign In:</h3>
-    <form id="loginForm">
-        <label>Username:</label>
-        <input type="text" id="userName" name="userName" required><br><br>
+
+    <header class="text-center custom-header text-white p-3 fw-bold">ThymeMachine</header>
+
+
+    <div class="logo-bar d-flex justify-content-center align-items-center">
+        <img src="images/ThymeMachine.png" alt="ThymeMachine Logo" class="img-fluid" style="height: 80px;">
+    </div>
+
+
+    <div class="login-container container d-flex flex-column mt-3">
+        <div class="login-card card p-4">
+    
+            <h2>Existing User? Welcome Back!</h2><br>
+
+            <h3>Sign In:</h3>
+
+   
+            <form id="loginForm">
+
+                <label class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required><br>
         
-        <label>Password:</label>
-        <input type="password" id="passWord" name="passWord" required><br><br>
+                <label class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required><br>
 
-        <button type="submit" class="btn btn-secondary">Enter</button>
-    </form>
+                <button type="submit" class="btn btn-secondary">Log In</button>
+    
+            </form>
 
-    <h2>New User? Sign Up Today:</h2>
-    <p><a href="signUp.html">Sign Up</a></p>
+            <br><h2>New User? Sign Up Today:</h2>
+            <p><a href="signUp.html">Sign Up</a></p>
+
+        </div>
+    </div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault(); 
             window.location.href = 'index.html'; 
         });
-        </script>
+    </script>
 
 
 </body>
