@@ -1,10 +1,31 @@
-/* Styles go here */
-body {
-    background-color: #e9e9e3;
-  
-
+main{
+    font-family: 'Montserrat', sans-serif;
 }
 
-nav {
-    background-color: #e9e9e3;
+.custom-navbar {
+  background-color: #E9E8E3;
+  padding: 0.35rem 0;
+  font-family: 'Montserrat', sans-serif;
+ 
 }
+
+.nav-icon {
+    max-height: 7rem;
+    width: auto;
+}
+
+.nav-label {
+    font-size: 0.95rem;
+}
+
+.custom-navbar a.nav-link {
+    padding: 0.25rem 0.5rem;
+}
+
+.custom-header {
+  background-color: #EE9E61;
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+/*# sourceMappingURL=myStyle.css.map */
