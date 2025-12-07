@@ -48,7 +48,7 @@
 					<div class="mb-3">
 						<label>Ingredients:</label>
 						<input type="text" placeholder="name" name="ingredientName" required>
-						<input type="number" placeholder="amount" name="ingredientAmount" required>
+						<input type="number" placeholder="amount" name="ingredientAmount" min="0" required>
 						<select name="ingredientUnit">
 							<option value="mg">mg</option>
 							<option value="g">g</option>
@@ -63,9 +63,8 @@
 							<option value="cup">cup</option>
 							<option value="fl oz">fl oz</option>
 						</select>
-						<button type="button" id="enter" class="btn btn-secondary">Enter</button><br><br>
+						<button type="button" id="enter" class="btn btn-secondary">Enter</button><br>
 
-				    	<button type="button" id="addanotherIngredient" class="btn btn-secondary">Add Another Ingredient</button>
 					</div>
 
 					<div class="mb-3">
@@ -97,7 +96,7 @@
 		
 				
 					<div class="d-flex gap-5">
-						<a class="nav-link nav-label" href="addNew.html">Add Recipe</a>
+						<a class="nav-link nav-label" href="addNew.html">Add New</a>
 						<a class="nav-link nav-label" href="myRecipes.html">My Recipes</a>
 						<a class="nav-link nav-label" href="myProfile.html">My Profile</a>
 					</div>
