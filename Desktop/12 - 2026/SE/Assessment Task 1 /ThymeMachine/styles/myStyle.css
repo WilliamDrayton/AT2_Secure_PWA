@@ -48,6 +48,16 @@ main{
     background-color: #E9E8E3;
 }
 
+.add-new-content{
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+
+
 
 
 /*# sourceMappingURL=myStyle.css.map */
