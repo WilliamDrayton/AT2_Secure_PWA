@@ -56,6 +56,39 @@ main{
     padding-bottom: 4rem;
 }
 
+.my-profile-content{
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.my-recipes-content{
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.page-content {
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.user-recipe-content {
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+
 
 
 

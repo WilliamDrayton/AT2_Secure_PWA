@@ -19,10 +19,11 @@
 
 	<body>
 
-		<header class="text-center custom-header text-white p-3 fw-bold">ThymeMachine</header>
+		<header class="text-center custom-header position-relative text-white p-3 fw-bold">ThymeMachine</header>
 		
-		<main class="container p-3">
+		<main>
 			<div class="page-content">
+				<div class="container p-3">
 
 			<h2>Welcome, <span id="userGreeting"></span>!</h2>
 			<h2>It's Thyme to Cook Something New!</h2>
@@ -30,8 +31,9 @@
 
 			<div class="card p-4 shadow">
 				<div class="flex-box">
-					Recent Recipes: 
-				</div>
+				<h4>Recent Recipes:</h4>
+				<ul id="recentRecipesList" class="list-unstyled"></ul>
+			</div>
 
 				<button type="button" class="btn btn-secondary" name="editRecipe" id="editRecipe">Edit</button><br>
 				<button type="button" class="btn btn-danger" name="deleteRecipe" id="deleteRecipe">Delete</button><br><br>
@@ -41,6 +43,7 @@
 
 			</div>
 
+		</div>
 
 		</main>
 
