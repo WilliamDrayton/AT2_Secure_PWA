@@ -14,11 +14,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const currentUser = localStorage.getItem("currentUser");
 
-    if (currentUser) {
-        document.getElementById("userGreeting").textContent = currentUser;
-    } else {
-        document.getElementById("userGreeting").textContent = "Guest";
-    }
+	const addIngredientBtn = document.getElementById("addIngredientBtn"); if (!addIngredientBtn) { console.log("Add Ingredient button not found!"); return; } 
+	
+	addIngredientBtn.addEventListener("click", () => { console.log("Add Ingredient button clicked!"); // <-- test alert("Button clicked!"); // optional visual test });
+
+
+
+		const userGreetingEl = document.getElementById("userGreeting");
+		if (userGreetingEl) {
+			if (currentUser) {
+				userGreetingEl.textContent = currentUser;
+			} else {
+				userGreetingEl.textContent = "Guest";
+			}
+		}
 
 	function getUsers() {
 		return JSON.parse(localStorage.getItem("users")) || {};
@@ -109,45 +118,55 @@ document.addEventListener("DOMContentLoaded", () => {
 	let ingredients = [];
 
 	const addIngredientBtn = document.getElementById("addIngredientBtn");
+	const itemInput = document.querySelector("input[name='ingredientName']");
+	const amountInput = document.querySelector("input[name='ingredientAmount']");
+	const unitSelect = document.querySelector("select[name='ingredientUnit']");
+	const addRecipeForm = document.getElementById("addRecipe");
+	
+	// Prevent form from submitting on Enter anywhere
+	addRecipeForm.addEventListener("submit", (e) => e.preventDefault());
+	
+	// Function to add ingredient
+	const addIngredient = () => {
+		const item = itemInput.value.trim();
+		const amount = amountInput.value.trim();
+		const unit = unitSelect.value;
 
-	if (addIngredientBtn) {
-
-		addIngredientBtn.addEventListener("click", () => {
-
-
-			const itemInput = document.querySelector("input[name = 'ingredientName']");
-			const amountInput = document.querySelector("input[name = 'ingredientAmount']");
-			const unitSelect = document.querySelector("select[name = 'ingredientUnit']");
-
-			const item = itemInput ? itemInput.value.trim() : "";
-			const amount = amountInput ? amountInput.value.trim() : "";
-			const unit = unitSelect ? unitSelect.value.trim(): "";
-
-			if (!item || !amount) {
-				alert("Please Enter an Ingredient and an Amount.")
-				return;
-			}
-
-			ingredients.push({
-				id: Date.now() + Math.floor(Math.random() *1000000),
-				item: item,
-				amount: amount,
-				unit: unit,
-			});
-
-			itemInput.value = "";
-			amountInput.value = "";
-			unitSelect.selectedIndex = 0;
-
-			renderIngredients();
-
+		console.log("Item:", item, "Amount:", amount, "Unit:", unit); 
+	
+		if (!item || !amount) {
+			alert("Please Enter an Ingredient and an Amount.");
+			return;
+		}
+	
+		ingredients.push({
+			id: Date.now() + Math.floor(Math.random() * 1000000),
+			item,
+			amount,
+			unit,
 		});
-
-	}
-
-		
-
-
+	
+		itemInput.value = "";
+		amountInput.value = "";
+		unitSelect.selectedIndex = 0;
+	
+		renderIngredients();
+	};
+	
+	// Click listener
+	addIngredientBtn.addEventListener("click", addIngredient);
+	
+	// Enter key listener for both inputs
+	[itemInput, amountInput].forEach(input => {
+		input.addEventListener("keydown", (e) => {
+			if (e.key === "Enter") {
+				e.preventDefault(); // stop form submit
+				addIngredient();
+			}
+		});
+	});
+			
+					
 
 	function renderIngredients() {
 		const listDiv = document.getElementById("ingredientsList");
@@ -176,5 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
+	addRecipeForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // stop the form from refreshing page
 });
-	
+
+
+});
+
+});
