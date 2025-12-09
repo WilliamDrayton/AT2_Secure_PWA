@@ -105,4 +105,76 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 	}
+
+	let ingredients = [];
+
+	const addIngredientBtn = document.getElementById("addIngredientBtn");
+
+	if (addIngredientBtn) {
+
+		addIngredientBtn.addEventListener("click", () => {
+
+
+			const itemInput = document.querySelector("input[name = 'ingredientName']");
+			const amountInput = document.querySelector("input[name = 'ingredientAmount']");
+			const unitSelect = document.querySelector("select[name = 'ingredientUnit']");
+
+			const item = itemInput ? itemInput.value.trim() : "";
+			const amount = amountInput ? amountInput.value.trim() : "";
+			const unit = unitSelect ? unitSelect.value.trim(): "";
+
+			if (!item || !amount) {
+				alert("Please Enter an Ingredient and an Amount.")
+				return;
+			}
+
+			ingredients.push({
+				id: Date.now() + Math.floor(Math.random() *1000000),
+				item: item,
+				amount: amount,
+				unit: unit,
+			});
+
+			itemInput.value = "";
+			amountInput.value = "";
+			unitSelect.selectedIndex = 0;
+
+			renderIngredients();
+
+		});
+
+	}
+
+		
+
+
+
+	function renderIngredients() {
+		const listDiv = document.getElementById("ingredientsList");
+		if (!listDiv) return;
+	
+		listDiv.innerHTML = "<h5>Ingredients Added:</h5>"; // reset header
+	
+		ingredients.forEach((ing, index) => {
+			const div = document.createElement("div");
+			div.classList.add("d-flex", "align-items-center", "mb-1");
+	
+			div.textContent = `${ing.amount} ${ing.unit} of ${ing.item}`;
+	
+			// optional remove button
+			const removeBtn = document.createElement("button");
+			removeBtn.textContent = "Remove";
+			removeBtn.classList.add("btn", "btn-sm", "btn-danger", "ms-2");
+			removeBtn.addEventListener("click", () => {
+				ingredients.splice(index, 1); // remove ingredient
+				renderIngredients(); // re-render
+			});
+	
+			div.appendChild(removeBtn);
+			listDiv.appendChild(div);
+			
+		});
+	}
+
 });
+	
