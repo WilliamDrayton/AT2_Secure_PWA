@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
 
-	const sortedRecipes = recipes.sort((a,b) => b.id = a.id).slice(0, 5);
+	const sortedRecipes = recipes.sort((a,b) => b.id - a.id).slice(0, 5);
 
 	sortedRecipes.forEach(recipe => {
 		const li = document.createElement("li");
@@ -258,12 +258,102 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		const link = document.createElement("a");
 		link.href = '../pages/userRecipe.html';
-		link.textContent = '${recipe.name} - ${new Date(recipe.id).toLocaleDateString()}';
+		link.textContent = `${recipe.name} - ${new Date(recipe.id).toLocaleDateString()}`;
 		link.classList.add("text-decoration-none");
 
 		li.appendChild(link);
 		recentRecipesList.appendChild(li);
-	})
+	});
+
+	const profileForm = document.getElementById("profileForm");
+
+	if (profileForm) {
+		const currentUser = localStorage.getItem("currentUser");
+		if (!currentUser) {
+			alert("User not logged in. Redirecting to login.");
+
+			setTimeout(() => {
+				window.location.href = 'login.html';
+			}, 3500);
+
+			return;
+
+		} else {
+			const users = getUsers();
+			const userData = users[currentUser];
+
+			const usernameInput = document.getElementById("username");
+			const emailInput = document.getElementById("email");
+			const passwordCheck = document.getElementById("passwordCheck");
+			const showPassword = document.getElementById("showPassword");
+			const editBtn = document.getElementById("editProfile");
+			const saveBtn = document.getElementById("saveProfile");
+			const deleteBtn = document.getElementById("deleteProfile");
+
+			usernameInput.value = currentUser;
+			emailInput.value = userData.email;
+
+			showPassword.addEventListener("change", () => {
+				passwordCheck.type = showPassword.checked ? "text" : "password";
+			});
+
+			editBtn.addEventListener("click", () => {
+				if(btoa(passwordCheck.value) === userData.password) {
+					usernameInput.removeAttribute("readonly");
+					emailInput.removeAttribute("readonly");
+					saveBtn.disabled = false;
+				} else {
+					alert("Incorrect password. Please try again.");
+				}
+			});
+			
+
+			saveBtn.addEventListener("click", () =>{
+				const newUsername = usernameInput.value;
+				const newEmail = emailInput.value;
+
+				if (!newUsername || !newEmail) {
+					alert("Username and Email can not be empty.")
+					return;
+				} 
+
+				users[currentUser].email = newEmail;
+
+				if (newUsername !== currentUser) {
+					users[newUsername] = {
+						...users[currentUser]
+					};
+					delete users[currentUser];
+					localStorage.setItem("currentUser", newUsername);
+				}
+
+				saveUsers(users);
+				alert("Profile updated successfully!");
+
+				usernameInput.setAttribute("readonly", true);
+				emailInput.setAttribute("readonly", true);
+				saveBtn.disabled = true;
+				passwordCheck.value = "";
+			});
+
+			deleteBtn.addEventListener("click", () =>{
+				if(confirm("Are you sure you want to delete your account. This can not be undone.")) {
+					delete users[currentUser];
+					saveUsers(users);
+					localStorage.removeItem("currentUser");
+					alert("Account deleted. Redirecting to login.");
+
+					setTimeout(() => {
+						window.location.href = 'login.html';
+					}, 3000);
+
+				}
+			})
+			
+			
+
+		}
+	}
 
 
 });

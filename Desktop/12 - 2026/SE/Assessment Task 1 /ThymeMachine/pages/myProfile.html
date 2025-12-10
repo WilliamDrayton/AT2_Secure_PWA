@@ -29,34 +29,33 @@
 
 				<h2 class="text-center mb-4">My Profile</h2>
 
+				<form id="profileForm">
+
 				<div class="mb-3">
 					<label class="form-label">Username:</label>
-					<label>William Drayton</label>
+					<input type="text" id="Profileusername" class="form-control" readonly>
 				</div>
 
 				<div class="mb-3">
 					<label class="form-label">Email Address:</label>
-					<label>William@Drayton.id.au</label>
+					<input type="email" id="profileEmail" class="form-control" readonly>
 				</div>
 
 				<div class="mb-3">
 					<label class="form-label">Password:</label>
-					<input type="password" id="passWord" name="passWord" value=userpassword>
+					<input type="password" id="passwordCheck" class="form-control" readonly>
+					<div class="form-check p-2 mt-1">
+						<input class="from-check-input" type="checkbox" id="showPassword">
+						<label class="from-check-label" for="showPassword">Show Password</label>
+					</div>
 				</div>
 
-
-
-				<div class="mb-3">
-					<label>Join Date:</label>
-					<label>5/12/2025</label>
-				</div>
-
-				<button type="button" name="editAccount" id="editAccount" class="btn btn-secondary">Edit</button><br>
+				<button type="button" name="editAccount" id="editAccount" class="btn btn-secondary">Edit</button><br><br>
 
 				<button type="button" name="deleteAccount" id="deleteAccount" class="btn btn-danger">Delete Account</button><br><br>
 
 
-
+				</form>
 
 			</div>
 
