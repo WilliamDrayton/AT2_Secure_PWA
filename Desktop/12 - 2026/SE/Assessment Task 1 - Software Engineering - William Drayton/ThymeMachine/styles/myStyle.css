@@ -1,0 +1,96 @@
+/*
+	Project: ThymeMachine - Software Engineering AT1
+	Author: William Drayton
+	Date Created: 23/11/25
+	Description: A style sheet for ThymeMachine
+*/
+
+
+
+
+main{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.custom-navbar {
+  background-color: #E9E8E3;
+  padding: 0.35rem 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.nav-icon {
+    max-height: 7rem;
+    width: auto;
+}
+
+.nav-label {
+    font-size: 0.95rem;
+}
+
+.custom-navbar a.nav-link {
+    padding: 0.25rem 0.5rem;
+}
+
+.custom-header {
+  background-color: #EE9E61;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.login-container {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-label {
+    color: #EE9E61;
+}
+
+.logo-bar {
+    background-color: #E9E8E3;
+}
+
+.add-new-content{
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.my-profile-content{
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.my-recipes-content{
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.page-content {
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+.user-recipe-content {
+    height: 80vh; 
+    overflow-y: scroll;
+    padding: 2.5rem; 
+    box-sizing: border-box; 
+    padding-bottom: 4rem;
+}
+
+
+
+
+
+
+/*# sourceMappingURL=myStyle.css.map */

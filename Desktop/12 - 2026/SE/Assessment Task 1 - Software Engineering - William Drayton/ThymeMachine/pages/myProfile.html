@@ -1,0 +1,86 @@
+<!--
+	Project: ThymeMachine - Software Engineering AT1
+	Author: William Drayton
+	Date Created: 23/11/25
+	Description: A profile page
+	-->
+	
+<!DOCTYPE html>
+<html>
+    <head>
+		<link rel='stylesheet' href='../styles/myStyle.css' />
+		<script src='../scripts/myScripts.js'></script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<title>ThymeMachine/MyProfile</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	</head>
+
+    <body>
+		<header class="text-center custom-header position-relative text-white p-3 fw-bold">
+			ThymeMachine
+		</header>
+
+		<main>
+			<div id="my-profile-content" class="my-profile-content mb-2">
+				<div class="container p-4 justify-content-center card p-4 shadow">
+			
+
+					<h2 class="text-center mb-4">My Profile</h2>
+
+					<form id="profileForm">
+
+						<div class="mb-3">
+							<label class="form-label">Username:</label>
+							<input type="text" id="Profileusername" class="form-control" readonly>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Email Address:</label>
+							<input type="email" id="profileEmail" class="form-control" readonly>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Password:</label>
+							<input type="password" id="passwordCheck" class="form-control" readonly>
+
+							<div class="form-check p-2 mt-1">
+								<input class="from-check-input" type="checkbox" id="showPassword">
+								<label class="from-check-label" for="showPassword">Show Password</label>
+							</div>
+						</div>
+
+						<button type="button" name="editAccount" id="editAccount" class="btn btn-secondary">Edit</button><br><br>
+
+						<button type="button" name="deleteAccount" id="deleteAccount" class="btn btn-danger">Delete Account</button><br><br>
+
+
+					</form>
+
+				</div>
+			</div>
+		</main>
+
+		<nav class="navbar fixed-bottom custom-navbar border-top">
+			<div class="container-fluid d-flex justify-content-center align-items-center gap-5">
+
+				
+				<a class="nav-link" href="../index.html">
+					<img src="../images/ThymeMachine.png" alt="Home" class="img-fluid nav-icon">
+				</a>
+		
+				
+				<div class="d-flex gap-5">
+					<a class="nav-link nav-label" href="addNew.html">Add New</a>
+					<a class="nav-link nav-label" href="myRecipes.html">My Recipes</a>
+					<a class="nav-link nav-label" href="myProfile.html">My Profile</a>
+				</div>
+		
+			</div>
+		</nav>
+
+
+    </body>
+    
+</html>

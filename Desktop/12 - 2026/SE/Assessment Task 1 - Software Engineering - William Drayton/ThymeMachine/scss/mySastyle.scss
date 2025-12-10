@@ -1,0 +1,25 @@
+/*
+	Project: ThymeMachine - Software Engineering AT1
+	Author: William Drayton
+	Date Created: 3/11/25
+	Description: A scss style sheet for ThymeMachine
+*/
+
+
+
+$primaryColour: #E9E8E3 ;
+$secondaryColour: #EE9E61 ;
+$tertiaryColour: #637D56 ;
+
+.custom-navbar{
+
+    background-color: $primaryColour;
+
+
+}
+
+.custom-header{
+
+    background-color: $secondaryColour;
+    
+}
