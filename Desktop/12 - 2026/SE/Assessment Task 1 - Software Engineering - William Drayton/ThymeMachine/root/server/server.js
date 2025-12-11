@@ -72,44 +72,38 @@ app.get("/api/getUserById/:id", (req, res) => {
 });
 
 app.post("/api/recipes", (req, res) =>{
-    const {currentUser, recipeName, recipeCuisine, cookHours, cookMinutes, notes} = req.body
+    const { userId, recipeName, recipeCuisine, cookHours, cookMinutes, notes, instructions } = req.body;
 
-    const query = "INSERT INTO recipes (currentUser, recipeName, recipeCuisine, cookHours, cookMinutes, notes) VALUES (?, ?, ?, ?, ?, ?)"
-
-    db.run(query, [currentUser, recipeName, recipeCuisine, cookHours, cookMinutes, notes], 
-        function (err) {
-            if(err) return res.status(400).json({error : err.message});
-            
-            res.json({success : true, recipeId : this.lastID});
-        }
-    );
-
+    const query = `
+        INSERT INTO recipes (userId, recipeName, recipeCuisine, cookHours, cookMinutes, notes, instructions)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    
+    db.run(query, [userId, recipeName, recipeCuisine, cookHours, cookMinutes, notes, instructions], function(err) {
+        if(err) return res.status(400).json({ error: err.message });
+    
+        res.json({ success: true, recipeId: this.lastID });
+    });
 });
 
 app.get("/api/recentRecipes/:userId", (req, res) => {
     const userId = req.params.userId;
 
-    
-    db.get("SELECT username FROM users WHERE userId = ?", [userId], (err, userRow) => {
-        if (err || !userRow) {
-            return res.status(400).json({ error: "User not found" });
+    const query = `
+        SELECT recipeId, recipeName, createdAt
+        FROM recipes
+        WHERE userId = ?
+        ORDER BY createdAt DESC
+        LIMIT 5
+    `;
+
+    db.all(query, [userId], (err, rows) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to load recipes" });
         }
 
-        const username = userRow.username;
-
-        
-        db.all(
-            "SELECT recipeId, recipeName, createdAt FROM recipes WHERE currentUser = ? ORDER BY createdAt DESC LIMIT 5",
-            [username],
-            (err, rows) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({ error: "Failed to load recipes" });
-                }
-
-                res.json(rows);
-            }
-        );
+        res.json(rows);
     });
 });
 
@@ -118,7 +112,7 @@ app.get("/api/currentUser", (req, res) => {
 
         if (!userId) return res.json({});
 
-        const query = "SELECT username FROM users WHERE id = ?"
+        const query = "SELECT username FROM users WHERE userId = ?"
 
         db.get(query, [userId], (err, row) => {
             if (err) return res.status(500).json({error: "Error"});
@@ -132,5 +126,5 @@ app.get("/api/currentUser", (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`ThymeMachine is running on http://localhost:${PORT}`);
 });

@@ -15,15 +15,16 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS recipes (
     recipeId INTEGER PRIMARY KEY AUTOINCREMENT,
-    currentUser TEXT NOT NULL,
+    userId INTEGER NOT NULL,
     recipeName TEXT NOT NULL,
     recipeCuisine TEXT NOT NULL,
     cookHours INTEGER DEFAULT 0,
     cookMinutes INTEGER DEFAULT 0,
     notes TEXT,
+    instructions TEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (currentUser) REFERENCES users(username) ON DELETE CASCADE
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ingredients (
@@ -36,10 +37,10 @@ CREATE TABLE IF NOT EXISTS ingredients (
 );
 
 CREATE TABLE IF NOT EXISTS favourites (
-    username TEXT NOT NULL,
+    userId INTEGER NOT NULL,
     recipeId INTEGER NOT NULL,
-    PRIMARY KEY (username, recipeId),
-    FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
+    PRIMARY KEY (userId, recipeId),
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE,
     FOREIGN KEY (recipeId) REFERENCES recipes(recipeId) ON DELETE CASCADE
 );
 
