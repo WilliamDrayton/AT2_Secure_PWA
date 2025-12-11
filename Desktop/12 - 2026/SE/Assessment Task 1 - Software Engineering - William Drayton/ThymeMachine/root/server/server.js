@@ -16,6 +16,7 @@ app.use(express.static(path.join(__dirname, "../../")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 const db = new sqlite3.Database(
     path.join(__dirname, "../../database/myDB.db"), 
     (err) => {
@@ -41,7 +42,7 @@ app.post("/api/signup", (req, res) => {
 app.post("/api/login", (req, res) =>{
     const {username, password} = req.body;
 
-    const query = "SELECT username FROM users WHERE username = ? AND password = ?"
+    const query = "SELECT userId, username FROM users WHERE username = ? AND password = ?"
 
     db.get(query, [username, password], (err, row) => {
         if (err) return res.status(500).json({error : err.message});
@@ -52,9 +53,22 @@ app.post("/api/login", (req, res) =>{
                 message: "Invalid Username or Password. Please Try Again."
         });
 
-        res.json({success: true, username: row.username});
+        res.json({success: true, userId: row.userId, username: row.username});
     });
 
+});
+
+app.get("/api/getUserById/:id", (req, res) => {
+    const userId = req.params.id;
+
+    const query = "SELECT username FROM users WHERE userId = ?";
+
+    db.get(query, [userId], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (!row) return res.json({});
+
+        res.json({ username: row.username });
+    });
 });
 
 app.post("/api/recipes", (req, res) =>{
@@ -72,32 +86,51 @@ app.post("/api/recipes", (req, res) =>{
 
 });
 
-app.get("/api/recipes/:username", (req, res) =>{
-    const username = req.params.username;
+app.get("/api/recentRecipes/:userId", (req, res) => {
+    const userId = req.params.userId;
 
-    const query = "SELECT * FROM recipes WHERE currentUser = ?"
+    
+    db.get("SELECT username FROM users WHERE userId = ?", [userId], (err, userRow) => {
+        if (err || !userRow) {
+            return res.status(400).json({ error: "User not found" });
+        }
 
-    db.all(query, [username], (err, rows) =>{
+        const username = userRow.username;
 
-        if (err) return res.status(500).json({error : err.message});
+        
+        db.all(
+            "SELECT recipeId, recipeName, createdAt FROM recipes WHERE currentUser = ? ORDER BY createdAt DESC LIMIT 5",
+            [username],
+            (err, rows) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ error: "Failed to load recipes" });
+                }
 
-        res.json(rows);
-
-    });
-});
-
-app.get("/test", (req, res) => {
-    db.get("SELECT name FROM sqlite_master WHERE type='table'", (err, row) => {
-        if (err) return res.status(500).send("Database error: " + err.message);
-
-        res.send(
-            "Server is working! First table in DB: " +
-                (row ? row.name : "No tables found")
+                res.json(rows);
+            }
         );
     });
 });
 
-// Start server
+app.get("/api/currentUser", (req, res) => {
+    const userId = req.session ? req.session.userId : null;
+
+        if (!userId) return res.json({});
+
+        const query = "SELECT username FROM users WHERE id = ?"
+
+        db.get(query, [userId], (err, row) => {
+            if (err) return res.status(500).json({error: "Error"});
+
+            if (!row) return res.json({});
+
+            res.json({username : row.username});
+        });
+
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
