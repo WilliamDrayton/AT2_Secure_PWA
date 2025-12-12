@@ -1,6 +1,8 @@
-Welcome to Thyme Machine - Your PWA Recipe Book.
+Project: ThymeMachine - Software Engineering AT1
 Author: William Drayton
-Created: 2025
+Date Created: 2025
+
+- Welcome to Thyme Machine - Your PWA Recipe Book. -
 
 - App Overview -
 

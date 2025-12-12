@@ -2,10 +2,12 @@
     Project: ThymeMachine - Software Engineering AT1
     Author: William Drayton
     Date Created: 5/11/25
-    Description: Javascript for ThymeMachine (Rewritten)
+    Description: Javascript for ThymeMachine 
 */
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    const userId = localStorage.getItem("userId");
 
 
     async function backendConnect(url, method = "GET", body = null) {
@@ -107,21 +109,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     loginResult.style.color = "red";
                 }
             } catch (err) {
-                loginResult.textContent = "An unexpected error occurred. Check console.";
+                loginResult.textContent = "An unexpected error occurred.";
                 loginResult.style.color = "red";
             }
         });
     }
 
-   
     const userGreeting = document.getElementById("userGreeting");
-    const storedUserId = localStorage.getItem("userId");
-
-    if (userGreeting && storedUserId) {
-        fetch(`/api/getUserById/${storedUserId}`)
+    
+    
+    if (userGreeting && userId) {
+        fetch(`/api/getUserById/${userId}`)
             .then(res => res.json())
             .then(data => {
-                userGreeting.textContent = data.username || "Guest";
+                userGreeting.textContent = data.username;
             })
             .catch(() => userGreeting.textContent = "Guest");
     }
@@ -129,8 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const recentRecipesList = document.getElementById("recentRecipesList");
 
-    if (recentRecipesList && storedUserId) {
-        fetch(`/api/recentRecipes/${storedUserId}`)
+    if (recentRecipesList && userId) {
+        fetch(`/api/recentRecipes/${userId}`)
             .then(res => res.json())
             .then(data => {
                 recentRecipesList.innerHTML = "";
@@ -228,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const userId = localStorage.getItem("userId");
+            
             if (!userId) {
                 alert("You must be logged in to add a recipe.");
                 return;
@@ -265,5 +266,133 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    const editBtn = document.getElementById("editAccount");
+    const deleteBtn = document.getElementById("deleteAccount");
+    const showPasswordCheckbox = document.getElementById("showPassword");
+
+    const usernameField = document.getElementById("Profileusername");
+    const emailField = document.getElementById("profileEmail");
+    const passwordField = document.getElementById("passwordCheck");
+
+   
+    async function loadProfile() {
+        
+        if (!userId) return;
+    
+        try {
+            const user = await backendConnect(`/api/getUserById/${userId}`);
+            
+            if (usernameField) usernameField.value = user.username;
+            if (emailField) emailField.value = user.email;
+            if (passwordField) passwordField.value = user.password;
+            
+        } catch (err) {
+            console.error("Failed to load profile:", err);
+        }
+    }
+    loadProfile();
+
+    
+    showPasswordCheckbox.addEventListener("change", () => {
+        passwordField.type = showPasswordCheckbox.checked ? "text" : "password";
+    });
+
+
+    editBtn.addEventListener("click", async () => {
+        if (editBtn.textContent === "Edit") {
+            usernameField.removeAttribute("readonly");
+            emailField.removeAttribute("readonly");
+            passwordField.removeAttribute("readonly");
+    
+            editBtn.textContent = "Save";
+            editBtn.classList.replace("btn-secondary", "btn-success");
+            return;
+        }
+    
+        if (editBtn.textContent === "Save") {
+            const updatedUser = {
+                username: usernameField.value,
+                email: emailField.value,
+                password: passwordField.value
+            };
+    
+            try {
+                
+                const res = await backendConnect(`/api/user/${userId}`, "PUT", updatedUser);
+                if (res.success) {
+                    usernameField.setAttribute("readonly", true);
+                    emailField.setAttribute("readonly", true);
+                    passwordField.setAttribute("readonly", true);
+    
+                    editBtn.textContent = "Edit";
+                    editBtn.classList.replace("btn-success", "btn-secondary");
+                } else {
+                    alert("Failed to update profile.");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    });
+
+
+   
+    deleteBtn.addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to delete your account?")) return;
+    
+        try {
+           
+            const res = await backendConnect(`/api/user/${userId}`, "DELETE");
+    
+            if (res.success) {
+                localStorage.removeItem("userId");
+                window.location.href = "../login.html";
+            } else {
+                alert("Could not delete account.");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    const recipesList = document.getElementById("recipesList");
+
+    if (recipesList && userId) {
+
+        fetch(`/api/userRecipes/${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                
+                recipesList.innerHTML = "";
+
+                if (!data || data.length === 0) {
+                    const li = document.createElement("li");
+                    li.textContent = "No recipes found.";
+                    li.classList.add("text-muted");
+                    recipesList.appendChild(li);
+                    return;
+                }
+
+                data.forEach(recipe => {
+                    const li = document.createElement("li");
+                    li.classList.add("mb-2");
+
+                    const btn = document.createElement("button");
+                    btn.textContent = recipe.recipeName;
+                    btn.classList.add("btn", "btn-outline-secondary", "w-100", "text-start");
+                    btn.addEventListener("click", () => {
+                        window.location.href = `pages/userRecipe.html?recipeId=${recipe.recipeId}`;
+                    });
+
+                    li.appendChild(btn);
+                    recipesList.appendChild(li);
+                });
+            })
+            .catch(err => {
+                recipesList.innerHTML = "<li class='text-danger'>Could not load recipes.</li>";
+            });
+    }
+
 
 });

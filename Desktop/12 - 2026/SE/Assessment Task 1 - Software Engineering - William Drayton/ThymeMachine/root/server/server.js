@@ -59,15 +59,38 @@ app.post("/api/login", (req, res) =>{
 });
 
 app.get("/api/getUserById/:id", (req, res) => {
-    const userId = req.params.id;
-
-    const query = "SELECT username FROM users WHERE userId = ?";
+    const userId = req.params.id;  
+    const query = "SELECT username, email, password FROM users WHERE userId = ?";
 
     db.get(query, [userId], (err, row) => {
         if (err) return res.status(500).json({ error: err.message });
         if (!row) return res.json({});
+        res.json({ username: row.username, email: row.email, password: row.password });
+    });
+});
 
-        res.json({ username: row.username });
+app.put("/api/user/:userId", (req, res) => {
+    
+    const userId = req.params.userId;
+    const { username, email, password } = req.body;
+
+    const query = `UPDATE users 
+                   SET username = ?, email = ?, password = ? 
+                   WHERE userId = ?`;
+
+    db.run(query, [username, email, password, userId], function(err) {
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true });
+    });
+});
+
+app.delete("/api/user/:userId", (req, res) => {
+    const userId = req.params.userId;
+
+    const query = "DELETE FROM users WHERE userId = ?";
+    db.run(query, [userId], function (err) {
+        if (err) return res.status(400).json({ error: err.message });
+        res.json({ success: true });
     });
 });
 
@@ -103,6 +126,43 @@ app.get("/api/recentRecipes/:userId", (req, res) => {
             return res.status(500).json({ error: "Failed to load recipes" });
         }
 
+        res.json(rows);
+    });
+});
+
+
+
+app.get("/api/userRecipes/:userId", (req, res) => {
+    const userId = req.params.userId;
+
+    const query = `
+        SELECT recipeId, recipeName, createdAt
+        FROM recipes
+        WHERE userId = ?
+        ORDER BY createdAt DESC
+    `;
+
+    db.all(query, [userId], (err, rows) => {
+        if (err) {
+            console.error("Failed to load recipes:", err);
+            return res.status(500).json({ error: "Failed to load recipes" });
+        }
+
+        res.json(rows);
+    });
+});
+
+app.get("/api/favourites/:userId", (req, res) => {
+    const userId = req.params.userId;
+    const query = `
+        SELECT r.*
+        FROM recipes r
+        JOIN favourites f ON r.recipeId = f.recipeId
+        WHERE f.userId = ?
+        ORDER BY r.createdAt DESC
+    `;
+    db.all(query, [userId], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
 });
