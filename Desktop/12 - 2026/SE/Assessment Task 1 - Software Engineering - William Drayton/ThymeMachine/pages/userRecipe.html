@@ -1,60 +1,125 @@
 <!--
 	Project: ThymeMachine - Software Engineering AT1
 	Author: William Drayton
-	Date Created: 8/12/25
-	Description: A page to view a selected recipe
+	Date Created: 29/11/25
+	Description: A page to view recipes
 	-->
-	
+
+
 <!DOCTYPE html>
-<html>
+
+<html lang ="en">
+
     <head>
-		<link rel='stylesheet' href='../styles/myStyle.css' />
-		<script src='../scripts/myScripts.js'></script>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-		<title>ThymeMachine/MyRecipes</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-	</head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../styles/myStyle.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <title>ThymeMachine/userRecipe</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    </head>
 
     <body>
-		<header class="text-center custom-header position-relative text-white p-3 fw-bold">ThymeMachine</header>
+        
+        <header class="text-center custom-header position-relative text-white p-3 fw-bold">ThymeMachine</header>
 
-		<main>
-			<div id="user-recipe-content mb-2">
-				<div class="container p-4 card p-4 shadow">
-					
-					<h2>[Selected Recipe]</h2>
-		
-				</div>
+            <main>
+                <div id="user-recipe-content" class="user-recipe-content mb-2">
+                    <div class="container p-4 card p-4 shadow">
 
-			</div>
+                        <h2>Selected Recipe:</h2>
 
-		</main>
+                        <form id="userRecipe">
 
-		
+                
+                            <div class="mb-3">
+                                <label>Recipe Name:</label>
+                                <input type="text" id="recipeName" name="recipeName" class="form-control" readonly>
+                            </div>
 
+               
+                            <div class="mb-3">
+                                <label>Cuisine:</label>
+                                <select id="recipeCuisine" name="recipeCuisine" class="form-select" disabled>
+                                <option value="Italian">Italian</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="French">French</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="Greek">Greek</option>
+                                <option value="Thai">Thai</option>
+                                <option value="Mexican">Mexican</option>
+                                <option value="Indian">Indian</option>
+                                <option value="American">American</option>
+                                <option value="English">English</option>
+                                <option value="Australian">Australian</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
 
+               
+                        <div class="mb-3">
+                            <label>Cook Time:</label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input type="number" id="cookHours" class="form-control" min="0" max="24" readonly>
+                                <span>hr/s</span>
+                                <input type="number" id="cookMinutes" class="form-control" min="0" max="60" readonly>
+                                <span>min/s</span>
+                            </div>
+                        </div>
 
-		
-			<nav class="navbar fixed-bottom custom-navbar border-top">
-				<div class="container-fluid d-flex justify-content-center align-items-center gap-5">
+                
+                        <div class="mb-3">
+                            <h5>Ingredients:</h5>
+                            <ul id="ingredientsList" class="list-group"></ul>
+                        </div>
 
-				
-					<a class="nav-link" href="../index.html">
-						<img src="../images/ThymeMachine.png" alt="Home" class="img-fluid nav-icon">
-					</a>
-		
-				
-					<div class="d-flex gap-5">
-						<a class="nav-link nav-label" href="addNew.html">Add New</a>
-						<a class="nav-link nav-label" href="myRecipes.html">My Recipes</a>
-						<a class="nav-link nav-label" href="myProfile.html">My Profile</a>
-					</div>
-		
-				</div>
-			</nav>
+               
+                        <div class="mb-3">
+                            <label>Instructions:</label>
+                            <textarea id="instructions" class="form-control" rows="5" readonly></textarea>
+                        </div>
+
+               
+                        <div class="mb-3">
+                            <label>Notes:</label>
+                            <textarea id="notes" class="form-control" rows="3" readonly></textarea>
+                        </div>
+
+                
+                        <div class="d-flex gap-3">
+					        <button type="button" id="favouriteRecipe" class="btn btn-primary">Favourite</button>
+                            <button type="button" id="editRecipe" class="btn btn-primary">Edit</button>
+                            <button type="button" id="deleteRecipe" class="btn btn-danger">Delete</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <nav class="navbar fixed-bottom custom-navbar border-top">
+            <div class="container-fluid d-flex justify-content-center align-items-center gap-5">
+
+                <a class="nav-link" href="../index.html">
+                    <img src="../images/ThymeMachine.png" alt="Home" class="img-fluid nav-icon">
+                </a>
+
+                <div class="d-flex gap-5">
+                    <a class="nav-link nav-label" href="addNew.html">Add New</a>
+                    <a class="nav-link nav-label" href="myRecipes.html">My Recipes</a>
+                    <a class="nav-link nav-label" href="myProfile.html">My Profile</a>
+                </div>
+
+            </div>
+        </nav>
+
+        <script src="../scripts/myScripts.js"></script>
 
     </body>
-    
+
 </html>

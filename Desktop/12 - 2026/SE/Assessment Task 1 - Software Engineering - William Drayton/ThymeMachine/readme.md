@@ -47,6 +47,10 @@ Accessibility :
 5. View your new recipe by clicking on the "My Recipes" link in the navbar
 6. Cook and enjoy your new ThymeMachine Recipe
 
+- Known Issues -
+
+- When viewing a recipe ingredients are not displayed.
+
 - Thank You -
 
 Thank you for using ThymeMachine! Your support and backing are greatly appreciated. 
