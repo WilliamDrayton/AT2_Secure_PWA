@@ -4,15 +4,17 @@
 #   Description: Python/Flask for the backend of the PWA. 
 
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask import jsonify
+from flask import session
+import secrets
 import sqlite3
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)
 
-from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app) 
-
 
 
 def get_db_connection():
@@ -22,7 +24,48 @@ def get_db_connection():
 
 @app.route("/")
 def home():
+    return render_template("login.html")
+
+@app.route("/registerUser")
+def registerUser():
+    return render_template("register.html")
+
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    if not username or not password:
+        return render_template("login.html", error="Please fill in all fields")
+
+    connection = get_db_connection()
+    user = connection.execute(
+        "SELECT * FROM users WHERE username = ?", (username,)
+    ).fetchone()
+    connection.close()
+
+    if user and bcrypt.check_password_hash(user["password"], password):
+        session["user_id"] = user["userID"]
+        return redirect("/dashboard")
+    else:
+        return render_template("login.html", error="Invalid username or password")
+
+   
+@app.route("/dashboard")
+def dashboard():
+    if "user_id" not in session:
+        return redirect("/login") #this shoots them back to the index.html page
     return render_template("index.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
 
 
 @app.route("/test-db")
@@ -38,7 +81,7 @@ def create_db():
         CREATE TABLE IF NOT EXISTS users (
               userID INTEGER PRIMARY KEY AUTOINCREMENT,
               email TEXT NOT NULL UNIQUE,
-              userName TEXT NOT NULL UNIQUE,
+              username TEXT NOT NULL UNIQUE,
               password TEXT NOT NULL
           )
     """)
@@ -53,15 +96,19 @@ def register():
     email = request.form["email"]
     password = request.form["password"]
 
-    # Hash password before storage
+    if not username or not email or not password:
+        return render_template("register.html", error="Please fill in all fields")
+
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
-    connection = get_db_connection()
-    connection.execute(
-        "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-        (username, email, hashed_password)
-    )
-    connection.commit()
-    connection.close()
-
-    return "User registered"
+    try:
+        connection = get_db_connection()
+        connection.execute(
+            "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
+            (email, username, hashed_password)
+        )
+        connection.commit()
+        connection.close()
+        return redirect("/login")
+    except sqlite3.IntegrityError:
+        return render_template("register.html", error="Email or username already exists")
