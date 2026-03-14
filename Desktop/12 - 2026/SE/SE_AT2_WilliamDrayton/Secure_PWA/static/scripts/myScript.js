@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
     const signupResult = document.getElementById("signupResult");
     
-    // --- LOGIN ---
+   
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formData
             });
             if (res.redirected) {
-                window.location.href = res.url; // go to dashboard
+                window.location.href = res.url; 
             } else {
                 const text = await res.text();
                 loginResult.textContent = "Invalid username or password";
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- SIGNUP ---
+    
     if (signupForm) {
         signupForm.addEventListener("submit", async (e) => {
             e.preventDefault(); 
@@ -41,16 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: formData
             });
             if (res.redirected) {
-                window.location.href = res.url; // go to login page
+                window.location.href = res.url; 
             } else {
                 const text = await res.text();
-                signupResult.textContent = text; // e.g., "Email or username already exists"
+                signupResult.textContent = text; 
                 signupResult.style.color = "red";
             }
         });
     }
 
-        // --- LOGOUT ---
+       
         const logoutBtn = document.getElementById("logoutAccount");
         if (logoutBtn) {
             logoutBtn.addEventListener("click", () => {

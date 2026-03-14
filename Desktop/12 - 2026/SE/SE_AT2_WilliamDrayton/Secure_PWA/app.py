@@ -30,12 +30,12 @@ def home():
 def registerUser():
     return render_template("register.html")
 
-@app.route("/login")
-def login_page():
-    return render_template("login.html")
-
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
+
+    if request.method == "GET":
+        return render_template("login.html")
+
     username = request.form["username"]
     password = request.form["password"]
 
@@ -51,21 +51,28 @@ def login():
     if user and bcrypt.check_password_hash(user["password"], password):
         session["user_id"] = user["userID"]
         return redirect("/dashboard")
-    else:
-        return render_template("login.html", error="Invalid username or password")
+
+    return render_template("login.html", error="Invalid username or password")
 
    
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
-        return redirect("/login") #this shoots them back to the index.html page
-    return render_template("index.html")
+        return redirect("/login") 
+    
+    connection = get_db_connection()
+    user = connection.execute(
+        "SELECT username FROM users WHERE userID = ?",
+        (session["user_id"],)
+    ).fetchone()
+    connection.close()
+
+    return render_template("index.html", username=user["username"]) 
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
-
 
 
 @app.route("/test-db")
