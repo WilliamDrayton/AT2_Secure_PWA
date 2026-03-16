@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (res.redirected) {
                 window.location.href = res.url; 
             } else {
-                const text = await res.text();
-                signupResult.textContent = text; 
+                const data = await res.json();
+                signupResult.textContent = data.error;
                 signupResult.style.color = "red";
             }
         });

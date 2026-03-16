@@ -58,7 +58,7 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
-        return redirect("/login") 
+        return redirect("/login", error = "Please log in to access the dashboard") 
     
     connection = get_db_connection()
     user = connection.execute(
@@ -79,23 +79,24 @@ def logout():
 def test_db():
     return jsonify({"status": "Database connection successful"})
 
-@app.route("/create-db")
-def create_db():
-    connection = get_db_connection()
-    cursor = connection.cursor()
+#database setup route - run once to create the database
+#@app.route("/create-db")
+#def create_db():
+    #connection = get_db_connection()
+    #cursor = connection.cursor()
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-              userID INTEGER PRIMARY KEY AUTOINCREMENT,
-              email TEXT NOT NULL UNIQUE,
-              username TEXT NOT NULL UNIQUE,
-              password TEXT NOT NULL
-          )
-    """)
+    #cursor.execute("""
+        #CREATE TABLE IF NOT EXISTS users (
+              #userID INTEGER PRIMARY KEY AUTOINCREMENT,
+              #email TEXT NOT NULL UNIQUE,
+              #username TEXT NOT NULL UNIQUE,
+              #password TEXT NOT NULL
+          #)
+    #""")
 
-    connection.commit()
-    connection.close()
-    return "Database setup complete"
+    #connection.commit()
+    #connection.close()
+    #return "Database setup complete"
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -104,7 +105,19 @@ def register():
     password = request.form["password"]
 
     if not username or not email or not password:
-        return render_template("register.html", error="Please fill in all fields")
+        return jsonify({"error": "Please fill in all fields"}), 400
+    
+    if len(username) < 3:
+        return jsonify({"error": "Username must be at least 3 characters"}), 400
+    
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+    
+    if len(username) > 16:
+        return jsonify({"error": "Username must be no more than 16 characters"}), 400
+    
+    if len(password) > 20:
+        return jsonify({"error": "Password must be no more than 20 characters"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
@@ -118,4 +131,4 @@ def register():
         connection.close()
         return redirect("/login")
     except sqlite3.IntegrityError:
-        return render_template("register.html", error="Email or username already exists")
+        return jsonify({"error": "Email or username already exists"}), 400
