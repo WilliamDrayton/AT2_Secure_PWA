@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, redirect
 from flask import jsonify
 from flask import session, redirect
 from functools import wraps
+from datetime import timedelta
 import secrets
 import re
 import sqlite3
@@ -15,6 +16,14 @@ from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
+
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,  # JS cannot access cookie
+    SESSION_COOKIE_SAMESITE="Lax", # reduces CSRF risk
+    SESSION_COOKIE_SECURE=False    # True when using HTTPS
+)
+
+app.permanent_session_lifetime = timedelta(minutes=20)
 
 bcrypt = Bcrypt(app) 
 
@@ -65,6 +74,7 @@ def login():
     connection.close()
 
     if user and bcrypt.check_password_hash(user["password"], password):
+        session.permanent = True
         session["user_id"] = user["userID"]
         return redirect("/dashboard")
 
@@ -138,8 +148,10 @@ def register():
 
     try:
         connection = get_db_connection()
+        username = sanitise_text(username)
+        email = sanitise_text(email)
+       
         connection.execute(
-            sanitise_text(username, email, password),
             "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
             (email, username, hashed_password)
         )
