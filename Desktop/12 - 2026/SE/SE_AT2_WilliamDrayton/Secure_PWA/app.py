@@ -6,8 +6,10 @@
 
 from flask import Flask, render_template, request, redirect
 from flask import jsonify
-from flask import session
+from flask import session, redirect
+from functools import wraps
 import secrets
+import re
 import sqlite3
 from flask_bcrypt import Bcrypt
 
@@ -16,11 +18,25 @@ app.secret_key = secrets.token_hex(16)
 
 bcrypt = Bcrypt(app) 
 
+def login_required(route_function):
+    @wraps(route_function)
+    def wrapper(*args, **kwargs):
+        # Security rationale:
+        # deny access unless authenticated
+        if "user_id" not in session:
+            return redirect("/login")
+        return route_function(*args, **kwargs)
+    return wrapper
 
 def get_db_connection():
     connection = sqlite3.connect("app.db")
     connection.row_factory = sqlite3.Row
     return connection
+
+def sanitise_text(text):
+    # Remove unsafe characters
+    # Security rationale: Limits unexpected symbols that may affect rendering
+    return re.sub(r"[^a-zA-Z0-9\s]", "", text)
 
 @app.route("/")
 def home():
@@ -56,9 +72,8 @@ def login():
 
    
 @app.route("/dashboard")
+@login_required
 def dashboard():
-    if "user_id" not in session:
-        return redirect("/login", error = "Please log in to access the dashboard") 
     
     connection = get_db_connection()
     user = connection.execute(
@@ -124,6 +139,7 @@ def register():
     try:
         connection = get_db_connection()
         connection.execute(
+            sanitise_text(username, email, password),
             "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
             (email, username, hashed_password)
         )
