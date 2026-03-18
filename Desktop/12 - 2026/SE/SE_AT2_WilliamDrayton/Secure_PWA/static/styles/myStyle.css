@@ -21,3 +21,13 @@ main {
     align-items: center;
     justify-content: center;
 }
+
+.settings-cog {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 22px;
+    color: black;
+    padding: 8px;
+    border-radius: 50%;
+}

@@ -3,19 +3,21 @@
 #   Date Created: 05/03/26
 #   Description: Python/Flask for the backend of the PWA. 
 
-
 from flask import Flask, render_template, request, redirect
 from flask import jsonify
-from flask import session, redirect
+from flask import session
 from functools import wraps
 from datetime import timedelta
 import secrets
 import re
+import os
 import sqlite3
+import logging
+from pathlib import Path
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(16)
 
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,  # JS cannot access cookie
@@ -26,6 +28,16 @@ app.config.update(
 app.permanent_session_lifetime = timedelta(minutes=20)
 
 bcrypt = Bcrypt(app) 
+
+env_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=env_path)
+app.secret_key = os.getenv("SECRET_KEY")
+
+logging.basicConfig(
+    filename="security.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 def login_required(route_function):
     @wraps(route_function)
@@ -64,21 +76,30 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
+    logging.info(f"Login attempt for user: {username}")
+
     if not username or not password:
         return render_template("login.html", error="Please fill in all fields")
 
-    connection = get_db_connection()
-    user = connection.execute(
-        "SELECT * FROM users WHERE username = ?", (username,)
-    ).fetchone()
-    connection.close()
+    try:
+        connection = get_db_connection()
+        user = connection.execute(
+            "SELECT * FROM users WHERE username = ?", (username,)
+        ).fetchone()
+        connection.close()
 
-    if user and bcrypt.check_password_hash(user["password"], password):
-        session.permanent = True
-        session["user_id"] = user["userID"]
-        return redirect("/dashboard")
+        if user and bcrypt.check_password_hash(user["password"], password):
+            session.permanent = True
+            session["user_id"] = user["userID"]
+            logging.info(f"Successful login: {username}")
+            return redirect("/dashboard")
+    
+        logging.warning(f"Failed login: {username}")
+        return render_template("login.html", error="Invalid username or password")
 
-    return render_template("login.html", error="Invalid username or password")
+    except Exception as e:
+        logging.error(f"Error during login for {username}: {e}")
+        return render_template("login.html", error="An unexpected error occurred")
 
    
 @app.route("/dashboard")
@@ -160,3 +181,69 @@ def register():
         return redirect("/login")
     except sqlite3.IntegrityError:
         return jsonify({"error": "Email or username already exists"}), 400
+    
+
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("myProfile.html")
+    
+@app.route("/get-profile")
+@login_required
+def get_profile():
+    try:
+        connection = get_db_connection()
+        user = connection.execute(
+            "SELECT username, email FROM users WHERE userID = ?",
+            (session["user_id"],)
+        ).fetchone()
+        connection.close()
+
+        return jsonify({
+            "username": user["username"],
+            "email": user["email"]
+        })
+
+    except Exception as e:
+        logging.error(f"Profile fetch error: {e}")
+        return jsonify({"error": "Failed"}), 500
+    
+@app.route("/update-profile", methods=["POST"])
+@login_required
+def update_profile():
+    data = request.get_json()
+
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+
+    if not username or not email:
+        return jsonify({"error": "All fields required"}), 400
+
+    try:
+        connection = get_db_connection()
+
+        if password:
+            hashed = bcrypt.generate_password_hash(password).decode("utf-8")
+            connection.execute(
+                "UPDATE users SET username = ?, email = ?, password = ? WHERE userID = ?",
+                (username, email, hashed, session["user_id"])
+            )
+        else:
+            connection.execute(
+                "UPDATE users SET username = ?, email = ? WHERE userID = ?",
+                (username, email, session["user_id"])
+            )
+
+        connection.commit()
+        connection.close()
+
+        return jsonify({"success": True})
+
+    except Exception as e:
+        logging.error(f"Update error: {e}")
+        return jsonify({"error": "Update failed"}), 500
+ 
+
+if __name__ == "__main__":    app.run(debug=False)
+
