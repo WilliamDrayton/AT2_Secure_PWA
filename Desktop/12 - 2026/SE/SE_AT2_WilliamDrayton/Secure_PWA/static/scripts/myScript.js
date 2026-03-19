@@ -16,22 +16,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordField = document.getElementById("newPassword");
     const showPasswordCheckbox = document.getElementById("showPassword");
     const editBtn = document.getElementById("editAccount");
-
-
+    
     
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(loginForm);
-            const res = await fetch("/login", {
-                method: "POST",
-                body: formData
-            });
-            if (res.redirected) {
-                window.location.href = res.url; 
+            const res = await fetch("/login", {method: "POST", body: formData});
+            const data = await res.json();
+            if (data.success) {
+                loginResult.textContent = "Login Successful!";
+                loginResult.style.color = "green";
+                setTimeout(() =>window.location.href = "/dashboard", 2500);
             } else {
-                const text = await res.text();
-                loginResult.textContent = "Invalid username or password";
+                
+                loginResult.textContent = data.error;
                 loginResult.style.color = "red";
             }
         });
@@ -46,25 +45,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 body: formData
             });
-            if (res.redirected) {
-                window.location.href = res.url; 
+            const data = await res.json();
+            if (data.success) {
+                signupResult.textContent = "Signup Successful! Redirecting to login.";
+                signupResult.style.color = "green";
+                setTimeout(() =>window.location.href = "/login", 2500);
             } else {
-                const data = await res.json();
                 signupResult.textContent = data.error;
                 signupResult.style.color = "red";
             }
         });
     }
-
-    if (usernameField && emailField) {
-        fetch("/get-profile")
-            .then(res => res.json())
-            .then(data => {
-                usernameField.value = data.username;
-                emailField.value = data.email;
-            })
-            
-    }    
+  
 
         const logoutBtn = document.getElementById("logoutAccount");
         if (logoutBtn) {
@@ -76,28 +68,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         if (usernameField && emailField && editBtn) {
-            // Load profile details
+            
             async function loadProfile() {
                 try {
                     const res = await fetch("/get-profile");
                     const data = await res.json();
                     usernameField.value = data.username;
                     emailField.value = data.email;
-                    if (passwordField) passwordField.value = ""; // always empty
+                    if (passwordField) passwordField.value = ""; 
                 } catch (err) {
                     console.error("Failed to load profile:", err);
                 }
             }
+            
             loadProfile();
         
-            // Show/hide password
+            
             if (showPasswordCheckbox && passwordField) {
                 showPasswordCheckbox.addEventListener("change", () => {
                     passwordField.type = showPasswordCheckbox.checked ? "text" : "password";
                 });
             }
         
-            // Edit / Save
+            
             editBtn.addEventListener("click", async () => {
                 const isEditing = editBtn.textContent === "Edit";
                 if (isEditing) {
@@ -107,10 +100,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     editBtn.textContent = "Save";
                     editBtn.classList.replace("btn-secondary", "btn-success");
                 } else {
+                    
+                    if (!passwordField.value) {
+                        alert("Please enter a new password to save changes.");
+                        return; 
+                    }
+
                     const payload = {
                         username: usernameField.value,
                         email: emailField.value,
-                        password: passwordField.value || null // only send if entered
+                        password: passwordField.value 
                     };
                     try {
                         const res = await fetch("/update-profile", {
@@ -130,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             alert(data.error || "Failed to update profile");
                         }
                     } catch (err) {
-                        console.error(err);
+                        alert("Something went wrong. Please try again.")
                     }
                 }
             });

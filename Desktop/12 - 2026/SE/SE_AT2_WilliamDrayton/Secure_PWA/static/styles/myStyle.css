@@ -5,6 +5,13 @@
     Description: A style sheet for the Secure PWA. 
 */
 
+.container{
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
 body {
     height: 100%;
     margin: 0;
@@ -14,20 +21,88 @@ body {
     font-family: 'Space Grotesk', sans-serif;
 }
 
-
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding:1.5vw;
 }
 
-.settings-cog {
-    position: absolute;
-    top: 15px;
+.settings-button, .home-button {
+    position: fixed;
+    top: 20px;
     right: 20px;
-    font-size: 22px;
+    font-size: 1.5rem;
     color: black;
-    padding: 8px;
+    padding: 10px;
     border-radius: 50%;
 }
+
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+@media (max-width: 800px) {
+
+    body {
+        font-size: 4vw;
+    }
+
+    main {
+        padding: 4vw;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .login-card {
+        padding: 5vw;
+    }
+
+    .dashboard-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .settings-button, .home-button {
+        position: static;
+        display: block;
+        margin: 10px auto;
+    }
+}
+
+@media(max-width: 500px) {
+    body {
+        font-size: 5vw;
+    }
+
+    
+    h1, h2, h3 {
+        font-size: 1.5rem;
+    }
+
+    .login-card {
+        padding: 6vw;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .settings-button, .home-button {
+        font-size: 1.8rem;
+        padding: 12px;
+    }
+}
+
+

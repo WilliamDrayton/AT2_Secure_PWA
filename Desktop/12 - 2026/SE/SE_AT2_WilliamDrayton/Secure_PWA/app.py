@@ -3,12 +3,9 @@
 #   Date Created: 05/03/26
 #   Description: Python/Flask for the backend of the PWA. 
 
-from flask import Flask, render_template, request, redirect
-from flask import jsonify
-from flask import session
+from flask import Flask, render_template, request, redirect, jsonify, session
 from functools import wraps
 from datetime import timedelta
-import secrets
 import re
 import os
 import sqlite3
@@ -29,8 +26,7 @@ app.permanent_session_lifetime = timedelta(minutes=20)
 
 bcrypt = Bcrypt(app) 
 
-env_path = Path(__file__).parent / ".env"
-load_dotenv(dotenv_path=env_path)
+load_dotenv()
 app.secret_key = os.getenv("SECRET_KEY")
 
 logging.basicConfig(
@@ -63,10 +59,6 @@ def sanitise_text(text):
 def home():
     return render_template("login.html")
 
-@app.route("/registerUser")
-def registerUser():
-    return render_template("register.html")
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -79,7 +71,7 @@ def login():
     logging.info(f"Login attempt for user: {username}")
 
     if not username or not password:
-        return render_template("login.html", error="Please fill in all fields")
+        return jsonify({"error": "Please fill in all fields"}), 400
 
     try:
         connection = get_db_connection()
@@ -92,14 +84,14 @@ def login():
             session.permanent = True
             session["user_id"] = user["userID"]
             logging.info(f"Successful login: {username}")
-            return redirect("/dashboard")
+            return jsonify({"success": True})
     
         logging.warning(f"Failed login: {username}")
-        return render_template("login.html", error="Invalid username or password")
+        return jsonify({"error": "Invalid username or password"}), 401
 
     except Exception as e:
         logging.error(f"Error during login for {username}: {e}")
-        return render_template("login.html", error="An unexpected error occurred")
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
    
 @app.route("/dashboard")
@@ -113,7 +105,12 @@ def dashboard():
     ).fetchone()
     connection.close()
 
+    if user is None:
+        session.clear()
+        return redirect("/login")
+
     return render_template("index.html", username=user["username"]) 
+
 
 @app.route("/logout")
 def logout():
@@ -121,31 +118,31 @@ def logout():
     return redirect("/")
 
 
-@app.route("/test-db")
-def test_db():
-    return jsonify({"status": "Database connection successful"})
-
 #database setup route - run once to create the database
-#@app.route("/create-db")
-#def create_db():
-    #connection = get_db_connection()
-    #cursor = connection.cursor()
+@app.route("/create-db")
+def create_db():
+    connection = get_db_connection()
+    cursor = connection.cursor()
 
-    #cursor.execute("""
-        #CREATE TABLE IF NOT EXISTS users (
-              #userID INTEGER PRIMARY KEY AUTOINCREMENT,
-              #email TEXT NOT NULL UNIQUE,
-              #username TEXT NOT NULL UNIQUE,
-              #password TEXT NOT NULL
-          #)
-    #""")
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+              userID INTEGER PRIMARY KEY AUTOINCREMENT,
+              email TEXT NOT NULL UNIQUE,
+              username TEXT NOT NULL UNIQUE,
+              password TEXT NOT NULL
+          )
+    """)
 
-    #connection.commit()
-    #connection.close()
-    #return "Database setup complete"
+    connection.commit()
+    connection.close()
+    return "Database setup complete"
 
-@app.route("/register", methods=["POST"])
+@app.route("/register", methods=["GET","POST"])
 def register():
+
+    if request.method == "GET":
+        return render_template("register.html")
+    
     username = request.form["username"]
     email = request.form["email"]
     password = request.form["password"]
@@ -156,21 +153,21 @@ def register():
     if len(username) < 3:
         return jsonify({"error": "Username must be at least 3 characters"}), 400
     
-    if len(password) < 6:
-        return jsonify({"error": "Password must be at least 6 characters"}), 400
-    
     if len(username) > 16:
         return jsonify({"error": "Username must be no more than 16 characters"}), 400
     
-    if len(password) > 20:
-        return jsonify({"error": "Password must be no more than 20 characters"}), 400
+    if password:
+        if len(password) < 6:
+            return jsonify({"error": "Password must be at least 6 characters"}), 400
+    
+        if len(password) > 20:
+            return jsonify({"error": "Password must be no more than 20 characters"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
     try:
         connection = get_db_connection()
         username = sanitise_text(username)
-        email = sanitise_text(email)
        
         connection.execute(
             "INSERT INTO users (email, username, password) VALUES (?, ?, ?)",
@@ -178,7 +175,7 @@ def register():
         )
         connection.commit()
         connection.close()
-        return redirect("/login")
+        return jsonify({"success": True})
     except sqlite3.IntegrityError:
         return jsonify({"error": "Email or username already exists"}), 400
     
@@ -199,6 +196,9 @@ def get_profile():
         ).fetchone()
         connection.close()
 
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+
         return jsonify({
             "username": user["username"],
             "email": user["email"]
@@ -217,8 +217,24 @@ def update_profile():
     email = data.get("email")
     password = data.get("password")
 
+    username = sanitise_text(username)
+
     if not username or not email:
-        return jsonify({"error": "All fields required"}), 400
+        return jsonify({"error": "Please enter a new username and email"}), 400
+    
+    if len(username) < 3:
+        return jsonify({"error": "Username must be at least 3 characters"}), 400
+    
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+    
+    if len(username) > 16:
+        return jsonify({"error": "Username must be no more than 16 characters"}), 400
+    
+    if len(password) > 20:
+        return jsonify({"error": "Password must be no more than 20 characters"}), 400
+    
+    
 
     try:
         connection = get_db_connection()
@@ -228,7 +244,9 @@ def update_profile():
             connection.execute(
                 "UPDATE users SET username = ?, email = ?, password = ? WHERE userID = ?",
                 (username, email, hashed, session["user_id"])
+               
             )
+            logging.info(f"Account update for {username}")
         else:
             connection.execute(
                 "UPDATE users SET username = ?, email = ? WHERE userID = ?",
